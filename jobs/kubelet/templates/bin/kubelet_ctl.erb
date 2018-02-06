@@ -49,7 +49,7 @@ start_kubelet() {
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
   else
-    hostname_override=<%= spec.ip %>
+    hostname_override=<%= "#{spec.name}-#{spec.index}.#{p('dns-suffix')}" %>
   fi
 
   zone_label=""
@@ -60,7 +60,10 @@ start_kubelet() {
 
   kubelet \
     --allow-privileged=<%= p('allow_privileged') %> \
+    --anonymous-auth=false \
+    --bootstrap-kubeconfig=/var/vcap/jobs/kubelet/config/bootstrap-kubeconfig \
     --cadvisor-port=0 \
+    --client-ca-file=/var/vcap/jobs/kubelet/config/ca.pem \
     --cloud-config=${cloud_config} \
     --cloud-provider=${cloud_provider} \
     --cluster-dns=10.100.200.10 \

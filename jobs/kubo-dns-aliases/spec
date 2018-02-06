@@ -9,5 +9,7 @@ consumes:
   type: kube-apiserver
 - name: etcd
   type: etcd_service
+- name: kubernetes-workers
+  type: kubernetes-workers
 
 properties: {}

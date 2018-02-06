@@ -9,7 +9,7 @@ templates:
   bin/ensure_kubelet_up_and_running.erb: bin/ensure_kubelet_up_and_running
   config/kubelet.pem.erb: config/kubelet.pem
   config/kubelet-key.pem.erb: config/kubelet-key.pem
-  config/kubeconfig.erb: config/kubeconfig
+  config/bootstrap-kubeconfig.erb: config/bootstrap-kubeconfig
   config/ca.pem.erb: config/ca.pem
 
 packages:
@@ -53,12 +53,16 @@ properties:
   eviction-hard:
     description: Node eviction thresholds
     example: "memory.available<500Mi,nodefs.available<10%"
-  api-token:
-    description: The token to access Kubernetes API
+  bootstrap-token:
+    description: The bootstrap token used during kubelet registration.
   logging-level:
     description: "V-leveled logging at the specified level. See https://github.com/golang/glog"
     default: 2
+  dns-suffix:
+    description: "DNS Suffix for all Kubelets in the cluster"
 
 provides:
 - name: kubernetes-workers
   type: kubernetes-workers
+  properties:
+  - dns-suffix

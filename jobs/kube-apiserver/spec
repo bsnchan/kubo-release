@@ -9,6 +9,7 @@ templates:
   config/authorization_policy.jsonl.erb: config/authorization_policy.jsonl
   config/audit_policy.yml: config/audit_policy.yml
   config/kubernetes.pem.erb: config/kubernetes.pem
+  config/kubernetes-ca.pem.erb: config/kubernetes-ca.pem
   config/kubernetes-key.pem.erb: config/kubernetes-key.pem
   config/service-account-public-key.pem.erb: config/service-account-public-key.pem
   config/etcd-ca.crt.erb: config/etcd-ca.crt
@@ -35,10 +36,10 @@ properties:
   enable_audit_logs:
     description: Enables audit logs
     default: true
+  kubelet-bootstrap-token:
+    description: The bootstrap token used during kubelet registration.
   kube-controller-manager-password:
     description: The password for the system:kube-controller-manager user
-  kubelet-password:
-    description: The password for the kubelet user
   kube-proxy-password:
     description: The password for the kube-proxy user
   kube-scheduler-password:

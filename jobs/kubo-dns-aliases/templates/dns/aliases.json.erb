@@ -22,5 +22,11 @@ link('etcd').instances.each do |instance|
   aliases.merge!({ etcd_alias => [instance.address] })
 end
 
+worker_dns_suffix = link('kubernetes-workers').p('dns-suffix')
+link('kubernetes-workers').instances.each do |instance|
+  worker_alias = "#{instance.name}-#{instance.index}.#{worker_dns_suffix}"
+  aliases.merge!({ worker_alias => [instance.address] })
+end
+
 JSON.dump(aliases)
 %>

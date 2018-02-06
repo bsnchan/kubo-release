@@ -4,6 +4,7 @@ name: kube-controller-manager
 templates:
   bin/kube_controller_manager_ctl.erb: bin/kube_controller_manager_ctl
   config/ca.pem.erb: config/ca.pem
+  config/signing-key.key.erb: config/signing-key.key
   config/service-account-private-key.pem.erb: config/service-account-private-key.pem
   config/kubeconfig.erb: config/kubeconfig
 
@@ -15,8 +16,8 @@ packages:
 properties:
   api-token:
     description: "API Token for the system:kube-controller-manager user"
-  tls.kubernetes:
-    description: "Certificate and private key for the Kubernetes master"
+  tls.kubo-ca:
+    description: "Certificate and private key for the Kubo CA"
   service-account-private-key:
     description: "Private key used to sign generated tokens"
   logging-level:
