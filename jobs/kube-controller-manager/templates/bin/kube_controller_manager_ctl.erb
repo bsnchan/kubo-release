@@ -30,6 +30,19 @@ start_kube_controller_manager() {
   detect_cloud_config
   check_and_chmod_product_serial $cloud_provider
 
+  <% if_p('http_proxy') do |http_proxy| %>
+  export http_proxy=<%= http_proxy %>
+  export HTTP_PROXY=<%= http_proxy %>
+  <% end %>
+  <% if_p('https_proxy') do |https_proxy| %>
+  export https_proxy=<%= https_proxy %>
+  export HTTPS_PROXY=<%= https_proxy %>
+  <% end %>
+  <% if_p('no_proxy') do |no_proxy| %>
+  export no_proxy=<%= no_proxy %>
+  export NO_PROXY=<%= no_proxy %>
+  <% end %>
+
   exec chpst -u vcap:vcap  \
     kube-controller-manager \
       --allocate-node-cidrs=true \
@@ -43,6 +56,7 @@ start_kube_controller_manager() {
       --root-ca-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem \
       --service-account-private-key-file=/var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem \
       --service-cluster-ip-range=10.100.200.0/24 \
+      --terminated-pod-gc-threshold=100 \
       --use-service-account-credentials \
       --v=<%=p('logging-level') %> \
     1>> $LOG_DIR/kube_controller_manager.stdout.log \

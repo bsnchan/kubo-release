@@ -77,6 +77,20 @@ start_kube_apiserver() {
   end
 %>
 
+
+  <% if_p('http_proxy') do |http_proxy| %>
+  export http_proxy=<%= http_proxy %>
+  export HTTP_PROXY=<%= http_proxy %>
+  <% end %>
+  <% if_p('https_proxy') do |https_proxy| %>
+  export https_proxy=<%= https_proxy %>
+  export HTTPS_PROXY=<%= https_proxy %>
+  <% end %>
+  <% if_p('no_proxy') do |no_proxy| %>
+  export no_proxy=<%= no_proxy %>
+  export NO_PROXY=<%= no_proxy %>
+  <% end %>
+
   exec chpst -u vcap:vcap  \
     kube-apiserver \
       --admission-control=<%= admission_control_options.join(",") %> \
@@ -96,6 +110,7 @@ start_kube_apiserver() {
       --insecure-port=0 \
       --kubelet-https=true \
       --profiling=false \
+      --repair-malformed-updates=false \
       --secure-port=8443 \
       --service-account-key-file="$CONFIG_DIR/service-account-public-key.pem" \
       --service-account-lookup=true \
@@ -124,13 +139,13 @@ start_kube_apiserver() {
       --oidc-username-claim="<%= oidc_username_claim %>" \
       <% end %> \
       <% if_p("oidc.username-prefix") do |oidc_username_prefix| %> \
-        --oidc-username-prefix="<%= oidc_username_prefix %>" \
+      --oidc-username-prefix="<%= oidc_username_prefix %>" \
       <% end %> \
       <% if_p("oidc.groups-claim") do |oidc_groups_claim| %> \
       --oidc-groups-claim="<%= oidc_groups_claim %>" \
       <% end %> \
       <% if_p("oidc.groups-prefix") do |oidc_groups_prefix| %> \
-        --oidc-groups-prefix="<%= oidc_groups_prefix %>" \
+      --oidc-groups-prefix="<%= oidc_groups_prefix %>" \
       <% end %> \
       <% if_p("oidc.ca") do %> \
       --oidc-ca-file="/var/vcap/jobs/kube-apiserver/config/oidc-ca.pem" \
