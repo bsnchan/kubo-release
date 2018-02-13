@@ -49,7 +49,7 @@ start_kubelet() {
     # The hostname needs to be set to the instance name so the gce cloud provider can manage the instance
     hostname_override=$(curl http://metadata.google.internal/computeMetadata/v1/instance/name -H "Metadata-Flavor: Google")
   else
-    hostname_override=<%= "#{spec.name}-#{spec.index}.#{p('dns-suffix')}" %>
+    hostname_override=<%= spec.ip %>
   fi
 
   zone_label=""
@@ -73,15 +73,15 @@ start_kubelet() {
     --docker-endpoint="${DOCKER_SOCKET}" \
     --docker="${DOCKER_SOCKET}" \
     --fail-swap-on=false \
+    --feature-gates=RotateKubeletServerCertificate=true \
     --hostname-override=${hostname_override} \
     --keep-terminated-pod-volumes=false \
     --kubeconfig=/var/vcap/jobs/kubelet/config/kubeconfig \
     --network-plugin=cni \
     --node-labels=<%= labels %>"$zone_label" \
     --read-only-port 0 \
+    --rotate-certificates \
     --serialize-image-pulls=false \
-    --tls-cert-file=/var/vcap/jobs/kubelet/config/kubelet.pem \
-    --tls-private-key-file=/var/vcap/jobs/kubelet/config/kubelet-key.pem \
     --v=<%=p('logging-level') %> \
     <% if_p('kube-reserved') do |kube_reserved| %>--kube-reserved="<%= kube_reserved %>"<% end %> \
     <% if_p('system-reserved') do |system_reserved| %>--system-reserved="<%= system_reserved %>"<% end %> \

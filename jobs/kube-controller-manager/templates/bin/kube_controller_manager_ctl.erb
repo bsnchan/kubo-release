@@ -39,6 +39,7 @@ start_kube_controller_manager() {
       --cluster-name=kubernetes \
       --cluster-signing-cert-file=/var/vcap/jobs/kube-controller-manager/config/ca.pem \
       --cluster-signing-key-file=/var/vcap/jobs/kube-controller-manager/config/signing-key.key \
+      --feature-gates=RotateKubeletServerCertificate=true \
       --kubeconfig=/var/vcap/jobs/kube-controller-manager/config/kubeconfig \
       --leader-elect=true \
       --profiling=false \

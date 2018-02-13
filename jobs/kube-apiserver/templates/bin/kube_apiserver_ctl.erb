@@ -94,6 +94,7 @@ start_kube_apiserver() {
       --etcd-cafile="$CONFIG_DIR/etcd-ca.crt" \
       --etcd-certfile="$CONFIG_DIR/etcd-client.crt" \
       --etcd-keyfile="$CONFIG_DIR/etcd-client.key" \
+      --feature-gates=RotateKubeletServerCertificate=true \
       --insecure-port=0 \
       --kubelet-certificate-authority="$CONFIG_DIR/kubernetes-ca.pem" \
       --kubelet-client-certificate="$CONFIG_DIR/kubernetes.pem" \
